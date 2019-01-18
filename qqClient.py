@@ -53,7 +53,10 @@ def sendmsg(client,name,address):
 
 def recvmsg(client):
     while True:
-        message,addr = client.recvfrom(1024)
+        try:
+            message,addr = client.recvfrom(1024)
+        except KeyboardInterrupt:
+            sys.exit()
         if message.decode() == 'exit':#如果收到服务器此消息，父进程退出
             os._exit(0)
         #因为print覆盖了之前的input界面，在这里重新输出一遍
