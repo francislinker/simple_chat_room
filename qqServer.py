@@ -27,7 +27,11 @@ def main():
         return
 
     elif pid == 0:#子进程的任务
-        print('我是子进程，我负责管理员喊话')
+        while True:
+            content=input('管理员说话：')
+            message="speak 管理员：%s" % content
+            server.sendto(message.encode(),address)
+
 
     else:#父进程处理客户端的各种请求
         doRequest(server)
@@ -53,7 +57,7 @@ def doRequest(server):
 
 #客户端退出处理函数
 def doQuit(server,name,userlist):
-    message = '%s 退出了聊天室' %name
+    message = '\n%s 退出了聊天室' %name
     for u in userlist:
         if u!=name:
             server.sendto(message.encode(),userlist[u])
@@ -65,7 +69,7 @@ def doQuit(server,name,userlist):
         
 #用于聊天的函数（把内容发送给其他成员）
 def doChat(server,content,userlist,name):
-    message = '%s 说：%s' % (name,content)
+    message = '\n%s 说：%s' % (name,content)
     for u in userlist:
         if u!= name:#发给不是自身的所有客户端
             server.sendto(message.encode(),userlist[u])
@@ -82,7 +86,7 @@ def doLogin(server,userlist,name,addr):
     #同名不存在，发送信号给客户端，运行进入
     server.sendto('OK'.encode(),addr)
     #通知所有人
-    message='欢迎%s进入聊天室'%name
+    message='\n欢迎%s进入聊天室'%name
     for u in userlist:
         server.sendto(message.encode(),userlist[u])#全发
     userlist[name]=addr#加入到存储结构userlist字典中

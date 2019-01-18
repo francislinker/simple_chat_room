@@ -56,7 +56,8 @@ def recvmsg(client):
         message,addr = client.recvfrom(1024)
         if message.decode() == 'exit':#如果收到服务器此消息，父进程退出
             os._exit(0)
-        print(message.decode())
+        #因为print覆盖了之前的input界面，在这里重新输出一遍
+        print(message.decode()+'\n请发言（quit退出）：',end='')
 
 if __name__ == "__main__":
     main()
